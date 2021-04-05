@@ -47,7 +47,6 @@ public class OrchestraLayout {
     int[][] map;
 
     int total;
-    int i = 0;
     // 方向
     String[] directs = new String[]{"right", "down", "left", "up"};
     int direct = 0;
@@ -59,32 +58,51 @@ public class OrchestraLayout {
 
         int row = 0, column = 0;
 
-        while (i++ < total) {
-
-            map[row][column] = numbers[index];
-            index = (++index) % 9;
-
-            if(row == xPos && column == yPos) {
-                return map[row][column];
-            }
+        while (total > 0) {
 
             if("up".equals(directs[direct])) {
+                if(map[row+1][column] > 0) {
+                    changeDirect();
+                    continue;
+                }
+                stepForward(row, column);
                 row--;
             }else if("down".equals(directs[direct])) {
+                if(row == num - 1 || map[row+1][column] > 0) {
+                    changeDirect();
+                    continue;
+                }
+                stepForward(row, column);
                 row++;
             }else if("left".equals(directs[direct])) {
+                if(column == 0 || map[row][column-1] > 0) {
+                    changeDirect();
+                    continue;
+                }
+                stepForward(row, column);
                 column--;
             } else if("right".equals(directs[direct])) {
+                if(column == num - 1 || map[row][column+1] > 0) {
+                    changeDirect();
+                    continue;
+                }
+                stepForward(row, column);
                 column++;
-            }
-
-            if(row <= 0 || row >= num - 1 || column <= 0 || column >= num - 1 || map[row][column] > 0) {
-                direct = (++direct) % 3;
             }
 
         }
 
-        return 0;
+        return map[xPos][yPos];
+    }
+
+    public void changeDirect() {
+        direct = (++direct) % 3; // 改变方向
+    }
+
+    public void stepForward(int row, int column) {
+        map[row][column] = numbers[index];
+        index = (++index) % 9;
+        total --;
     }
 
     public static void main(String[] args) {
@@ -94,6 +112,14 @@ public class OrchestraLayout {
 
         OrchestraLayout ol = new OrchestraLayout();
 
-        System.out.println(ol.solution(num, xPos, yPos));
+
+        System.out.println("==============" + ol.solution(num, xPos, yPos));
+
+        for (int i = 0; i < num; i++) {
+            for (int j = 0; j < num; j++) {
+                System.out.printf("%d ", ol.map[i][j]);
+            }
+            System.out.println();
+        }
     }
 }
