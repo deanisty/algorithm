@@ -60,33 +60,36 @@ public class OrchestraLayout {
 
         while (total > 0) {
 
+            setCurrent(row, column);
+
+
             if("up".equals(directs[direct])) {
-                if(map[row+1][column] > 0) {
+                if(map[row-1][column] > 0) {
                     changeDirect();
+                    column++;
                     continue;
                 }
-                stepForward(row, column);
                 row--;
             }else if("down".equals(directs[direct])) {
                 if(row == num - 1 || map[row+1][column] > 0) {
                     changeDirect();
+                    column--;
                     continue;
                 }
-                stepForward(row, column);
                 row++;
             }else if("left".equals(directs[direct])) {
                 if(column == 0 || map[row][column-1] > 0) {
                     changeDirect();
+                    row--;
                     continue;
                 }
-                stepForward(row, column);
                 column--;
             } else if("right".equals(directs[direct])) {
                 if(column == num - 1 || map[row][column+1] > 0) {
                     changeDirect();
+                    row++;
                     continue;
                 }
-                stepForward(row, column);
                 column++;
             }
 
@@ -95,31 +98,36 @@ public class OrchestraLayout {
         return map[xPos][yPos];
     }
 
-    public void changeDirect() {
-        direct = (++direct) % 3; // 改变方向
-    }
-
-    public void stepForward(int row, int column) {
+   public void setCurrent(int row, int column) {
         map[row][column] = numbers[index];
         index = (++index) % 9;
         total --;
     }
 
-    public static void main(String[] args) {
-        int num = 3;
-        int xPos = 2;
-        int yPos = 2;
+    public void changeDirect() {
+        // 改变方向
+        direct = (++direct) % 4;
+    }
 
-        OrchestraLayout ol = new OrchestraLayout();
-
-
-        System.out.println("==============" + ol.solution(num, xPos, yPos));
-
+    public void printMap(int num) {
         for (int i = 0; i < num; i++) {
             for (int j = 0; j < num; j++) {
-                System.out.printf("%d ", ol.map[i][j]);
+                System.out.printf("%d ", map[i][j]);
             }
             System.out.println();
         }
+    }
+
+    public static void main(String[] args) {
+        int num = 7466;
+        int xPos = 7084;
+        int yPos = 2520;
+
+        OrchestraLayout ol = new OrchestraLayout();
+        int target = ol.solution(num, xPos, yPos);
+
+//        ol.printMap(num);
+
+        System.out.println("==============" + target);
     }
 }
